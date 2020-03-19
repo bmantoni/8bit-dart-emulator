@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:pic_dart_emu/HexLine.dart';
 import 'package:test/test.dart';
 

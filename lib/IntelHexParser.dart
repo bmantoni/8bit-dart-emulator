@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+
+import 'package:pic_dart_emu/HexLine.dart';
 
 // Parser for the IntelHex file format (ASCII encoded binary) outputted by the XC8 compiler.
 // Yields an instruction until done.
@@ -20,6 +23,7 @@ class HexParser {
     return inputStream
       .transform(ascii.decoder)
       .transform(LineSplitter())
+      .map((String lineStr) => HexLine(lineStr))
       .forEach(onInstruction);
   }
 }

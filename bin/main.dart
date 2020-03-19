@@ -1,5 +1,6 @@
-import 'package:pic_dart_emu/runner.dart' as runner;
+import 'package:pic_dart_emu/runner.dart';
 
 void main(List<String> arguments) {
-  runner.run(arguments);
+  //runner.run(arguments);
+  ProgramRunner().run(arguments);
 }
