@@ -5,11 +5,12 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:pic_dart_emu/IntelHexParser.dart';
 import 'package:pic_dart_emu/PIC.dart';
+import 'package:pic_dart_emu/ProgramLoader.dart';
 
 class ProgramRunner {
   static final String PROGRAM_ARG = 'program-file';
 
-  HexParser parser;
+  ProgramLoader loader;
   PIC computer;
 
   int run(List<String> arguments) {
@@ -28,6 +29,8 @@ class ProgramRunner {
 
   void runProgram(String file) {
     print('Running program: ${file}!');
-    parser = HexParser(File(file));
+    
+    loader = ProgramLoader(File(file));
+    loader.load(computer.memory);
   }
 }

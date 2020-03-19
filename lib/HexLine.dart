@@ -12,7 +12,19 @@ class HexComponent {
     _val = val;
   }
 
-  int get intValue => int.parse(_val, radix: 16);
+  int get intValue => hexToInt(_val);
+
+  int get eightBitAddressValue => hexAddrTo8BitAddr(intValue);
+
+  // The hex format stored 8 bit addresses as 16 bit values, so are effectively doubled.
+  // so this should always be integer division, so safe to use truncating division
+  static int hexAddrTo8BitAddr(int sixteenBitAddr) {
+    return sixteenBitAddr ~/ 2;
+  }
+
+  static int hexToInt(String str) {
+    return int.parse(str, radix: 16);
+  }
 }
 
 class HexLine {
@@ -28,5 +40,10 @@ class HexLine {
     final dataHexCharLen = byteCount.intValue * 2;
     data = HexComponent(dataHexCharLen)
       ..value = line.substring(9, 9 + dataHexCharLen);
+  }
+
+  int getDataByte(int byteOffset) {
+    var byteStr = data.value.substring(byteOffset * 2, byteOffset * 2 + 2);
+    return int.parse(byteStr, radix: 16);
   }
 }

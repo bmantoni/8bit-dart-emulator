@@ -28,4 +28,14 @@ void main() {
     var line = HexLine(lineStr);
     expect(line.data.value, '8316FF2390008312FD2B');
   });
+
+  test('getDataByte works', () {
+    var line = HexLine(lineStr);
+    expect(line.getDataByte(0), 131);
+  });
+
+  test('getDataByte works 2', () {
+    var line = HexLine(lineStr);
+    expect(line.getDataByte(1), 22);
+  });
 }
