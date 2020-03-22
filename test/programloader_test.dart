@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:pic_dart_emu/HexLine.dart';
+import 'package:pic_dart_emu/HexUtilities.dart';
 import 'package:pic_dart_emu/Memory.dart';
 import 'package:pic_dart_emu/ProgramLoader.dart';
 import 'package:test/test.dart';
@@ -13,10 +14,10 @@ void main() {
     var memory = Memory();
 
     await loader.load(memory);
-    memory.debug();
+    memory.debug(MemoryTypes.Program);
 
     // byte at 07B6 should be DF
-    var eightBitAddr = HexComponent.hexAddrTo8BitAddr(HexComponent.hexToInt('07B6'));
-    expect(memory.getByte(eightBitAddr), int.parse('DF', radix: 16));
+    var eightBitAddr = HexComponent.hexAddrTo8BitAddr(HexUtilities.hexToInt('07B6'));
+    expect(memory.getByte(MemoryTypes.Program, eightBitAddr), int.parse('DF', radix: 16));
   });
 }

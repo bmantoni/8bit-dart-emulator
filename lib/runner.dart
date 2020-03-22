@@ -11,7 +11,7 @@ class ProgramRunner {
   static final String PROGRAM_ARG = 'program-file';
 
   ProgramLoader loader;
-  PIC computer;
+  PIC computer = PIC();
 
   int run(List<String> arguments) {
     final argParser = ArgParser()

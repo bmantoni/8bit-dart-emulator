@@ -1,3 +1,8 @@
+import 'package:pic_dart_emu/HexUtilities.dart';
+
+/*
+ * For parsing IntelHex files (not hex stuff in general) 
+*/
 class HexComponent {
   String _val;
   final int _len;
@@ -12,7 +17,7 @@ class HexComponent {
     _val = val;
   }
 
-  int get intValue => hexToInt(_val);
+  int get intValue => HexUtilities.hexToInt(_val);
 
   int get eightBitAddressValue => hexAddrTo8BitAddr(intValue);
 
@@ -20,10 +25,6 @@ class HexComponent {
   // so this should always be integer division, so safe to use truncating division
   static int hexAddrTo8BitAddr(int sixteenBitAddr) {
     return sixteenBitAddr ~/ 2;
-  }
-
-  static int hexToInt(String str) {
-    return int.parse(str, radix: 16);
   }
 }
 

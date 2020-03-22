@@ -1,25 +1,31 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+enum MemoryTypes { Program, Data }
+
 class Memory {
   static const DEBUG_LINE_LENGTH = 30;
 
-  static const int PROGRAM_DATA_SIZE = 1027; // TODO move this outside
+  static const int PROGRAM_DATA_SIZE = 1027;
+  static const int DATA_BANK_SIZE = 128;
 
-  ByteData memory = ByteData(PROGRAM_DATA_SIZE); // 0x000 - 0x0400
+  final _memories = {
+    MemoryTypes.Program: ByteData(PROGRAM_DATA_SIZE),
+    MemoryTypes.Data: ByteData(DATA_BANK_SIZE * 2) // 2 banks of 128. 00-7F, 80-FF
+  };
 
-  void setByte(int offset, int value) {
+  void setByte(MemoryTypes type, int offset, int value) {
     //print('Setting ${offset} to ${value}');
-    memory.setUint8(offset, value);
+    _memories[type].setUint8(offset, value);
   }
 
-  int getByte(int offset) {
-    return memory.getUint8(offset);
+  int getByte(MemoryTypes type, int offset) {
+    return _memories[type].getUint8(offset);
   }
 
-  void debug() {
-    for(var i = 0; i < memory.lengthInBytes; ++i) {
-      var hexStr = memory.getUint8(i).toRadixString(16);
+  void debug(MemoryTypes type) {
+    for(var i = 0; i < _memories[type].lengthInBytes; ++i) {
+      var hexStr = _memories[type].getUint8(i).toRadixString(16);
       if (hexStr.length == 1) stdout.write('0');
       stdout.write(hexStr);
       stdout.write(' ');
