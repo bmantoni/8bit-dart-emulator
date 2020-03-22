@@ -11,6 +11,7 @@ class PIC {
   void run() {
     while (!stop()) {
       // get instruction at pc addr
+      // reverse the bytes
       // run it
       //   look it up in a table (matching the bit pattern)
     }
