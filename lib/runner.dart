@@ -3,7 +3,6 @@ library runner;
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:pic_dart_emu/IntelHexParser.dart';
 import 'package:pic_dart_emu/PIC.dart';
 import 'package:pic_dart_emu/ProgramLoader.dart';
 

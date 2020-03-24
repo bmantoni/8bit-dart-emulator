@@ -23,6 +23,10 @@ class Memory {
     return _memories[type].getUint8(offset);
   }
 
+  ByteData getBytes(MemoryTypes type, int offset, int len) {
+    return _memories[type].buffer.asByteData(offset, len);
+  }
+
   void debug(MemoryTypes type) {
     for(var i = 0; i < _memories[type].lengthInBytes; ++i) {
       var hexStr = _memories[type].getUint8(i).toRadixString(16);

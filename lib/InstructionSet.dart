@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:pic_dart_emu/ByteUtilities.dart';
-import 'package:pic_dart_emu/HexUtilities.dart';
 import 'package:pic_dart_emu/InstructionUtilities.dart';
 import 'package:pic_dart_emu/Memory.dart';
 
@@ -20,19 +19,18 @@ class Instruction {
 
   bool matches(ByteData opcode) {
     return InstructionUtilities.matchesMsbBits(
-      opcode, _offset, _mask); //10, 12: 11 00xx kkkk kkkk
+      opcode, _offset, _mask);
   }
 }
 
 class InstructionSet {
   final Iterable<Instruction> _iset = [
-    Instruction(Instructions.movlw, 10, 12, (d, m) => print('movlw'))
+    Instruction(Instructions.movlw, 10, 12, (d, m) => print('movlw')) // 11 00xx kkkk kkkk
   ];
 
   Instruction run(ByteData opcode, Memory memory) {
     // first, swap the bytes since its little-endian
     var oc = ByteUtilities.swapBytes(opcode);
-    var i = _iset.singleWhere((p) => p.matches(oc))..run(oc, memory);
-    return i;
+    return _iset.singleWhere((p) => p.matches(oc))..run(oc, memory);
   }
 }
