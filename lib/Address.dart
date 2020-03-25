@@ -19,9 +19,7 @@ class Address {
   }
 
   Address(this._addr);
-  Address.fromString(String hex) {
-    _addr = HexUtilities.hexToBytes(hex);
-  }
+
   Address.fromInt(int a) {
     _addr = ByteUtilities.int16ToBytes(a);
   }

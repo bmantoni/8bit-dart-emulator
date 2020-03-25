@@ -1,33 +1,35 @@
-import 'package:pic_dart_emu/HexUtilities.dart';
+import 'package:pic_dart_emu/ByteUtilities.dart';
 import 'package:pic_dart_emu/InstructionSet.dart';
 import 'package:pic_dart_emu/Memory.dart';
 import 'package:test/test.dart';
 
 void main() {
-  var testInstr = Instruction(Instructions.movlw, 10, 12, (d, m) => print('movlw'));
+  var testInstr = MovLwInstruction(10, 12, (d, m) => null);
 
   test('match msb', () {
-    var str = '30DF'; // assume bytes reversed by now.
-
-    expect(testInstr.matches(HexUtilities.hexToBytes(str)), true);
+    expect(testInstr.matches(ByteUtilities.int16ToBytes(0x30DF)), true);
   });
 
   test('match msb, less significant bytes dont matter', () {
-    var str = '30FF';
-
-    expect(testInstr.matches(HexUtilities.hexToBytes(str)), true);
+    expect(testInstr.matches(ByteUtilities.int16ToBytes(0x30FF)), true);
   });
 
   test('dont match msb when wrong', () {
-    var str = 'E0FF';
-
-    expect(testInstr.matches(HexUtilities.hexToBytes(str)), false);
+    expect(testInstr.matches(ByteUtilities.int16ToBytes(0xE0FF)), false);
   });
   
   test('movlw matches', () {
-    var insBytes = HexUtilities.hexToBytes('DF30');
+    var insBytes = ByteUtilities.int16ToBytes(0xDF30);
     var i = InstructionSet().run(insBytes, Memory());
 
     expect(i.name.toString(), 'Instructions.movlw');
+  });
+
+  test('movlw sets w (accumulator)', () {
+    final memory = Memory();
+    var insBytes = ByteUtilities.int16ToBytes(0xDF30);
+    InstructionSet().run(insBytes, memory);
+
+    expect(memory.w, 223);
   });
 }
