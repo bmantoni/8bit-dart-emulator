@@ -31,5 +31,6 @@ class ProgramRunner {
     
     loader = ProgramLoader(File(file));
     loader.load(computer.memory);
+    computer.run();
   }
 }

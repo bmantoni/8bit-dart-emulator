@@ -1,4 +1,5 @@
 import 'package:pic_dart_emu/Address.dart';
+import 'package:pic_dart_emu/HexUtilities.dart';
 import 'package:pic_dart_emu/InstructionSet.dart';
 import 'package:pic_dart_emu/Memory.dart';
 
@@ -13,19 +14,15 @@ class PIC {
 
   void run() {
     while (!stop()) {
-      // get instruction at pc addr
-      // reverse the bytes
-      // run it
-      //   look it up in a table (matching the bit pattern)
-      while(!stop()) {
-        //var opcode = _memory.getByte(type, offset)
-        //_iset.run(opcode, memory)
-      }
+      print('Running instruction at ${HexUtilities.bytesToHex(_programCounter.address)}');
+      var opcode = _memory.getWord(MemoryTypes.Program, _programCounter);
+      _iset.run(opcode, memory);
+      _programCounter.increment();
     }
   }
     
   bool stop() {
     // for now, don't wrap around.
-    return _programCounter <= '1FFF';
+    return !_memory.isValidAddress(_programCounter);
   }
 }

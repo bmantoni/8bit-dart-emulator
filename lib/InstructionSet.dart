@@ -1,10 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:pic_dart_emu/ByteUtilities.dart';
+import 'package:pic_dart_emu/HexUtilities.dart';
 import 'package:pic_dart_emu/InstructionUtilities.dart';
 import 'package:pic_dart_emu/Memory.dart';
 
 enum Instructions {
+  unsupported,
   movlw
 }
 
@@ -27,10 +29,15 @@ class InstructionSet {
   final Iterable<Instruction> _iset = [
     Instruction(Instructions.movlw, 10, 12, (d, m) => print('movlw')) // 11 00xx kkkk kkkk
   ];
+  final _unsupportedInstr = Instruction(
+    Instructions.unsupported, 0, 0, 
+    (d, m) => print('unknown instruction ${HexUtilities.bytesToHex(d)}'));
 
   Instruction run(ByteData opcode, Memory memory) {
     // first, swap the bytes since its little-endian
     var oc = ByteUtilities.swapBytes(opcode);
-    return _iset.singleWhere((p) => p.matches(oc))..run(oc, memory);
+    return _iset.singleWhere((p) => p.matches(oc), 
+      orElse: () => _unsupportedInstr)
+      ..run(oc, memory);
   }
 }

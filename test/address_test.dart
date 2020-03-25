@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:pic_dart_emu/Address.dart';
+import 'package:pic_dart_emu/ByteUtilities.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -20,5 +21,11 @@ void main() {
     var a = Address.fromString('0400');
 
     expect(a > '00FF', true);
+  });
+
+  test('increment', () {
+    var a = Address.fromString('0400');
+    a.increment();
+    expect(a.address.getUint16(0), 1025);
   });
 }

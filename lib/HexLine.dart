@@ -18,14 +18,6 @@ class HexComponent {
   }
 
   int get intValue => HexUtilities.hexToInt(_val);
-
-  int get eightBitAddressValue => hexAddrTo8BitAddr(intValue);
-
-  // The hex format stored 8 bit addresses as 16 bit values, so are effectively doubled.
-  // so this should always be integer division, so safe to use truncating division
-  static int hexAddrTo8BitAddr(int sixteenBitAddr) {
-    return sixteenBitAddr ~/ 2;
-  }
 }
 
 class HexLine {

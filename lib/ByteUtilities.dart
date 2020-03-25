@@ -9,4 +9,8 @@ class ByteUtilities {
     }
     return output;
   }
+
+  static ByteData int16ToBytes(int x) {
+    return ByteData(2)..setUint16(0, x);
+  }
 }

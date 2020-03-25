@@ -14,7 +14,7 @@ class ProgramLoader {
     
     return parser.start((HexLine line) {
       // skip the first, and last lines
-      if (line.address.eightBitAddressValue > 0 && line.address.eightBitAddressValue <= Memory.PROGRAM_DATA_SIZE) {
+      if (line.address.intValue > 0 && line.address.intValue <= Memory.PROGRAM_DATA_BYTE_SIZE) {
         loadDataBytes(memory, line);
       }
     });  
@@ -24,7 +24,7 @@ class ProgramLoader {
       //print('Loading line with byte length: ${line.byteCount.intValue.toString()}');
       // this could be moved to Memory class?
       for (var i = 0; i < line.byteCount.intValue; ++i) {
-        memory.setByte(MemoryTypes.Program, line.address.eightBitAddressValue + i, line.getDataByte(i));
+        memory.setByte(MemoryTypes.Program, line.address.intValue + i, line.getDataByte(i));
       }
   }
 }
