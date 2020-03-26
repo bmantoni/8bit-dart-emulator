@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:pic_dart_emu/ByteUtilities.dart';
 import 'package:pic_dart_emu/InstructionSet.dart';
 import 'package:pic_dart_emu/Memory.dart';
 
@@ -45,7 +46,10 @@ class BsfInstruction extends Instruction {
   int get offset => 10;
 
   @override
-  Function(Fields, Memory) get runFunc => (f, m) => /* select bank 1? */ null;
+  Function(Fields, Memory) get runFunc => (f, m) => 
+    m.setByte(MemoryTypes.Data, f.f, 
+      ByteUtilities.setBit(
+        m.getByte(MemoryTypes.Data, f.f), f.b));
 }
 
 // move W to f

@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:pic_dart_emu/ByteUtilities.dart';
 import 'package:pic_dart_emu/InstructionLib.dart';
-import 'package:pic_dart_emu/InstructionUtilities.dart';
 import 'package:pic_dart_emu/Memory.dart';
 
 class Fields {
@@ -24,13 +23,13 @@ abstract class Instruction {
   }
 
   bool matches(ByteData opcode) {
-    return InstructionUtilities.matchesMsbBits(opcode, offset, mask);
+    return ByteUtilities.matchesMsbBits(opcode, offset, mask);
   }
 
   Fields extractFields(ByteData opcode);
 
   int extractField(ByteData opcode, int rightBits, length) {
-    return InstructionUtilities.extractBits(opcode, rightBits, length)
+    return ByteUtilities.extractBits(opcode, rightBits, length)
       .getUint16(0);
   }
 }

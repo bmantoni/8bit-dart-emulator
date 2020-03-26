@@ -2,9 +2,17 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:pic_dart_emu/Address.dart';
+import 'package:pic_dart_emu/ByteUtilities.dart';
 
 enum MemoryTypes { Program, Data }
-enum Registers { W }
+enum Registers { W, Status }
+
+class SpecialRegister {
+  final ByteData _dataMemory;
+  SpecialRegister(this._dataMemory);
+  int get sregisterStatus => _dataMemory.getUint8(0x03);
+  set sregisterStatus(int value) => _dataMemory.setUint8(0x03, value);
+}
 
 class Memory {
   static const DEBUG_LINE_LENGTH = 30;
@@ -24,9 +32,17 @@ class Memory {
     MemoryTypes.Data:    ByteData(DATA_BANK_SIZE * 2) // 2 banks of 128. 00-7F, 80-FF
   };
 
-  final _registers = {
-    Registers.W: ByteData(REGISTER_BYTE_SIZE)
-  };
+  var _registers;
+
+  Memory() {
+    _registers = {
+        Registers.W: ByteData(REGISTER_BYTE_SIZE),         // accumulator
+        Registers.Status: SpecialRegister(_memories[MemoryTypes.Data])
+    };
+  }
+
+  ByteData get sregisterStatus => _memories[MemoryTypes.Data].buffer.asByteData(0x03, 1);
+  //set sregisterStatus(ByteData value) => _memories[MemoryTypes.Data].setUint8(0x03, value);
 
   void setByte(MemoryTypes type, int offset, int value) {
     //print('Setting ${offset} to ${value}');

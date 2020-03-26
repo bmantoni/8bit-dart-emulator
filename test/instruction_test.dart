@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:pic_dart_emu/ByteUtilities.dart';
 import 'package:pic_dart_emu/InstructionLib.dart';
 import 'package:pic_dart_emu/InstructionSet.dart';
@@ -44,5 +46,13 @@ void main() {
     InstructionSet().run(insBytes, memory);
 
     expect(memory.getByte(MemoryTypes.Data, 0x5), 223);
+  });
+
+  test('bsf sets bit', () {
+    final memory = Memory();
+    var insBytes = ByteUtilities.int16ToBytes(0x8316);
+    InstructionSet().run(insBytes, memory);
+
+    expect(memory.sregisterStatus.getUint8(0), pow(2, 5));
   });
 }
