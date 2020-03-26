@@ -33,4 +33,16 @@ void main() {
 
     expect(memory.w, 223);
   });
+
+  test('movwlw then movwf sets register', () {
+    final memory = Memory();
+    // load 223 to W
+    var insBytes = ByteUtilities.int16ToBytes(0xDF30);
+    InstructionSet().run(insBytes, memory);
+    // move W to f
+    insBytes = ByteUtilities.int16ToBytes(0x8500);
+    InstructionSet().run(insBytes, memory);
+
+    expect(memory.getByte(MemoryTypes.Data, 0x5), 223);
+  });
 }
