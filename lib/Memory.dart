@@ -20,8 +20,8 @@ class Memory {
   static const int REGISTER_BYTE_SIZE = 1;
 
   final _memories = {
-    MemoryTypes.Program: ByteData(PROGRAM_DATA_BYTE_SIZE)
-    //MemoryTypes.Data: ByteData(DATA_BANK_SIZE * 2) // 2 banks of 128. 00-7F, 80-FF
+    MemoryTypes.Program: ByteData(PROGRAM_DATA_BYTE_SIZE),
+    MemoryTypes.Data:    ByteData(DATA_BANK_SIZE * 2) // 2 banks of 128. 00-7F, 80-FF
   };
 
   final _registers = {

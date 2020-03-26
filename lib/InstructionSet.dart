@@ -1,14 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:pic_dart_emu/ByteUtilities.dart';
+import 'package:pic_dart_emu/InstructionLib.dart';
 import 'package:pic_dart_emu/InstructionUtilities.dart';
 import 'package:pic_dart_emu/Memory.dart';
-
-enum Instructions {
-  unsupported,
-  movlw,
-  bsf
-}
 
 class Fields {
   int d, f, b, k;
@@ -17,20 +12,19 @@ class Fields {
 
 abstract class Instruction {
   Instructions get name;
-  final int _offset;
-  final int _mask;
-  final Function(Fields, Memory) _runFunc;
-
-  Instruction(this._offset, this._mask, this._runFunc);
+  // the right offset to the first lsb of the fixed operand code
+  int get offset;
+  int get mask;
+  Function(Fields, Memory) get runFunc;
 
   void run(ByteData opcode, Memory memory) {
     print('Running ${name}');
     var f = extractFields(opcode);
-    _runFunc(f, memory);
+    runFunc(f, memory);
   }
 
   bool matches(ByteData opcode) {
-    return InstructionUtilities.matchesMsbBits(opcode, _offset, _mask);
+    return InstructionUtilities.matchesMsbBits(opcode, offset, mask);
   }
 
   Fields extractFields(ByteData opcode);
@@ -41,38 +35,13 @@ abstract class Instruction {
   }
 }
 
-class MovLwInstruction extends Instruction {
-  MovLwInstruction(int offset, int mask, Function(Fields, Memory) runFunc): 
-    super(offset, mask, runFunc);
-
-  @override
-  Fields extractFields(ByteData opcode) {
-    return Fields(k: extractField(opcode, 8, 8));
-  }
-
-  @override
-  Instructions get name => Instructions.movlw;
-}
-
-class UnsupportedInstruction extends Instruction {
-  UnsupportedInstruction(int offset, int mask, Function(Fields, Memory) runFunc): 
-    super(offset, mask, runFunc);
-
-  @override
-  Fields extractFields(ByteData opcode) {
-    return null;
-  }
-
-  @override
-  Instructions get name => Instructions.unsupported;
-}
-
 class InstructionSet {
   final Iterable<Instruction> _iset = [
-    MovLwInstruction(10, 12, (f, m) => m.w = f.k),    // 11 00xx kkkk kkkk
-    //Instruction(Instructions.bsf, 10, 5, (f, m) => print('TODO')) // 01 01bb bfff ffff
+    MovLwInstruction(),    // 11 00xx kkkk kkkk
+    BsfInstruction(),      // 01 01bb bfff ffff
+    MovWfInstruction(),    // 00 0000 1fff ffff
   ];
-  final _unsupportedInstr = UnsupportedInstruction(0, 0, (f, m) => null);
+  final _unsupportedInstr = UnsupportedInstruction();
 
   Instruction run(ByteData opcode, Memory memory) {
     // first, swap the bytes since its little-endian

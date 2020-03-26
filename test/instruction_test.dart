@@ -1,10 +1,11 @@
 import 'package:pic_dart_emu/ByteUtilities.dart';
+import 'package:pic_dart_emu/InstructionLib.dart';
 import 'package:pic_dart_emu/InstructionSet.dart';
 import 'package:pic_dart_emu/Memory.dart';
 import 'package:test/test.dart';
 
 void main() {
-  var testInstr = MovLwInstruction(10, 12, (d, m) => null);
+  var testInstr = MovLwInstruction();
 
   test('match msb', () {
     expect(testInstr.matches(ByteUtilities.int16ToBytes(0x30DF)), true);
