@@ -68,4 +68,24 @@ void main() {
     var m = ByteUtilities.setBit(0x4, 0);
     expect(m, 0x5);
   });  
+
+  test('get bit 0, true', () {
+    var m = ByteUtilities.getBit(0x3, 0);
+    expect(m, 1);
+  });
+
+  test('get bit 1, true', () {
+    var m = ByteUtilities.getBit(0x3, 0);
+    expect(m, 1);
+  });
+
+  test('get bit 0, false', () {
+    var m = ByteUtilities.getBit(0x4, 0);
+    expect(m, 0);
+  });
+
+  test('get bit 2, false', () {
+    var m = ByteUtilities.getBit(0x4, 2);
+    expect(m, 1);
+  });
 }

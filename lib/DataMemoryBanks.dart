@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:pic_dart_emu/ByteStore.dart';
+import 'package:pic_dart_emu/ByteUtilities.dart';
 
 class DataMemory extends ByteStore {
 
@@ -9,6 +10,8 @@ class DataMemory extends ByteStore {
   static const int NUM_BANKS = 2;
   static const int BANK_SIZE_BYTES = 256; // 128 or 256 ?
 
+  static const int STATUS_ADDR = 0x3;
+
   List<ByteData> _memories;
 
   DataMemory() {
@@ -16,12 +19,14 @@ class DataMemory extends ByteStore {
       (i) => ByteData(BANK_SIZE_BYTES)).toList();
   }
 
+  // I'm going to treat Bank0.status as _the_ status, and ignore Bank1.status
+  int get registerStatus => _memories[0].getUint8(STATUS_ADDR); 
+
   ByteData getBank(int num) {
     return _memories[num];
   }
 
-  // TODO switch bank based on STATUS
-  int get _currentBankNum => 0;
+  int get _currentBankNum => ByteUtilities.getBit(registerStatus, 5);
   ByteData get _currentBank => _memories[_currentBankNum];
 
   @override
