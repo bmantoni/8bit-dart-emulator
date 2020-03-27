@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:pic_dart_emu/Address.dart';
 import 'package:test/test.dart';
 
@@ -6,6 +8,12 @@ void main() {
     var a = Address.fromInt(0x0400);
 
     expect(a.asInt(), 1024);
+  });
+
+  test('set address', () {
+    var a = Address.fromInt(0x0);
+    a.address = ByteData(Address.SIZE)..setUint16(0, 0x4);
+    expect(a.asInt(), 4);
   });
 
   test('lessThan int', () {
