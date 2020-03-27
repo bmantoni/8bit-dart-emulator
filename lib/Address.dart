@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:pic_dart_emu/ByteUtilities.dart';
-import 'package:pic_dart_emu/HexUtilities.dart';
+import 'package:pic_dart_emu/hexparser/HexUtilities.dart';
 
 // This is used as a WORD address. So when addressing Memory, it's multiplied by 2.
 // This holds a 13 bit program counter too.

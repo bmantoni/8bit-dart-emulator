@@ -1,4 +1,4 @@
-import 'package:pic_dart_emu/HexLine.dart';
+import 'package:pic_dart_emu/hexparser/HexLine.dart';
 import 'package:test/test.dart';
 
 void main() {

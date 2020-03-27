@@ -1,5 +1,5 @@
 import 'package:pic_dart_emu/Address.dart';
-import 'package:pic_dart_emu/HexUtilities.dart';
+import 'package:pic_dart_emu/hexparser/HexUtilities.dart';
 import 'package:pic_dart_emu/InstructionSet.dart';
 import 'package:pic_dart_emu/Memory.dart';
 
@@ -16,7 +16,7 @@ class PIC {
   void run() {
     while (!stop()) {
       print('Running instruction at ${HexUtilities.bytesToHex(_programCounter.address)}');
-      var opcode = _memory.getWord(MemoryTypes.Program, _programCounter);
+      var opcode = _memory.program.getWord(_programCounter);
       _iset.run(opcode, memory);
       _programCounter.increment();
     }
@@ -24,6 +24,6 @@ class PIC {
     
   bool stop() {
     // for now, don't wrap around.
-    return !_memory.isValidAddress(_programCounter);
+    return !_memory.program.isValidAddress(_programCounter);
   }
 }

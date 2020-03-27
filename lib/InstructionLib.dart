@@ -47,9 +47,9 @@ class BsfInstruction extends Instruction {
 
   @override
   Function(Fields, Memory) get runFunc => (f, m) => 
-    m.setByte(MemoryTypes.Data, f.f, 
+    m.data.setByte(f.f, 
       ByteUtilities.setBit(
-        m.getByte(MemoryTypes.Data, f.f), f.b));
+        m.data.getByte(f.f), f.b));
 }
 
 // move W to f
@@ -69,7 +69,7 @@ class MovWfInstruction extends Instruction {
   Instructions get name => Instructions.movwf;
 
   @override
-  Function(Fields, Memory) get runFunc => (f, m) => m.setByte(MemoryTypes.Data, f.f, m.w);
+  Function(Fields, Memory) get runFunc => (f, m) => m.data.setByte(f.f, m.w);
 }
 
 class UnsupportedInstruction extends Instruction {

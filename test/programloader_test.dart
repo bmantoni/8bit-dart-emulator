@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:pic_dart_emu/HexUtilities.dart';
 import 'package:pic_dart_emu/Memory.dart';
 import 'package:pic_dart_emu/ProgramLoader.dart';
 import 'package:test/test.dart';
@@ -13,10 +12,9 @@ void main() {
     var memory = Memory();
 
     await loader.load(memory);
-    memory.debug(MemoryTypes.Program);
+    //memory.debug(MemoryTypes.Program);
 
     // byte at 07B6 should be DF
-    expect(memory.getByte(MemoryTypes.Program, HexUtilities.hexToInt('07B6')), 
-      int.parse('DF', radix: 16));
+    expect(memory.program.getByte(0x07B6), 0xDF);
   });
 }

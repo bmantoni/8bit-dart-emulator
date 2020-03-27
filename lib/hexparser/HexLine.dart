@@ -1,4 +1,4 @@
-import 'package:pic_dart_emu/HexUtilities.dart';
+import 'package:pic_dart_emu/hexparser/HexUtilities.dart';
 
 /*
  * For parsing IntelHex files (not hex stuff in general) 

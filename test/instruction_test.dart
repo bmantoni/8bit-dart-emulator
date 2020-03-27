@@ -45,7 +45,7 @@ void main() {
     insBytes = ByteUtilities.int16ToBytes(0x8500);
     InstructionSet().run(insBytes, memory);
 
-    expect(memory.getByte(MemoryTypes.Data, 0x5), 223);
+    expect(memory.data.getByte(0x5), 223);
   });
 
   test('bsf sets bit', () {

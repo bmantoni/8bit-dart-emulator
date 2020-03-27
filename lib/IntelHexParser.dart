@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:pic_dart_emu/HexLine.dart';
+import 'package:pic_dart_emu/hexparser/HexLine.dart';
 
 /* Parser for the IntelHex file format (ASCII encoded binary) outputted by the XC8 compiler.
  * Yields an instruction until done.
