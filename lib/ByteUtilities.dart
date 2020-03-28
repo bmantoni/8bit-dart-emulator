@@ -42,6 +42,10 @@ class ByteUtilities {
     return i | (0x1 << rightOffset);
   }
 
+  static int clearBit(int i, int rightOffset) {
+    return i & ~(0x1 << rightOffset);
+  }
+
   static int getBit(int i, int rightOffset) {
     return ( i & (0x1 << rightOffset)) >> rightOffset;
   }

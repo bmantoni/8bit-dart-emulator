@@ -8,7 +8,8 @@ enum Instructions {
   unsupported,
   movlw,
   movwf,
-  bsf
+  bsf,
+  bcf
 }
 
 class MovLwInstruction extends Instruction {
@@ -49,6 +50,28 @@ class BsfInstruction extends Instruction {
   Function(Fields, Memory) get runFunc => (f, m) => 
     m.data.setByte(f.f, 
       ByteUtilities.setBit(
+        m.data.getByte(f.f), f.b));
+}
+
+class BcfInstruction extends Instruction {
+  @override
+  Fields extractFields(ByteData opcode) {
+    return Fields(b: extractField(opcode, 10, 3), f: extractField(opcode, 7, 7));
+  }
+
+  @override
+  Instructions get name => Instructions.bcf;
+
+  @override
+  int get mask => 4;
+
+  @override
+  int get offset => 10;
+
+  @override
+  Function(Fields, Memory) get runFunc => (f, m) => 
+    m.data.setByte(f.f, 
+      ByteUtilities.clearBit(
         m.data.getByte(f.f), f.b));
 }
 

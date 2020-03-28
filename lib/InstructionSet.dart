@@ -38,6 +38,7 @@ class InstructionSet {
   final Iterable<Instruction> _iset = [
     MovLwInstruction(),    // 11 00xx kkkk kkkk
     BsfInstruction(),      // 01 01bb bfff ffff
+    BcfInstruction(),      // 01 00bb bfff ffff
     MovWfInstruction(),    // 00 0000 1fff ffff
   ];
   final _unsupportedInstr = UnsupportedInstruction();

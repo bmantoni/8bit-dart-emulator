@@ -67,7 +67,27 @@ void main() {
   test('set bit 0', () {
     var m = ByteUtilities.setBit(0x4, 0);
     expect(m, 0x5);
-  });  
+  });
+
+  test('clear bit 0, 1', () {
+    var m = ByteUtilities.clearBit(0x1, 0);
+    expect(m, 0x0);
+  });
+
+  test('clear bit 0, 3', () {
+    var m = ByteUtilities.clearBit(0x3, 0);
+    expect(m, 0x2);
+  });
+
+  test('clear bit 1, 3', () {
+    var m = ByteUtilities.clearBit(0x3, 1);
+    expect(m, 0x1);
+  });
+
+  test('clear bit 1, 5 (0 stays 0)', () {
+    var m = ByteUtilities.clearBit(0x5, 1);
+    expect(m, 0x5);
+  });
 
   test('get bit 0, true', () {
     var m = ByteUtilities.getBit(0x3, 0);

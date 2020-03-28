@@ -55,4 +55,19 @@ void main() {
 
     expect(memory.data.registerStatus, pow(2, 5));
   });
+
+  test('bcf clears bit', () {
+    final memory = Memory();
+
+    // first, set it
+    var insBytes = ByteUtilities.int16ToBytes(0x8316);
+    InstructionSet().run(insBytes, memory);
+    expect(memory.data.registerStatus, pow(2, 5));
+
+    // now, clear it
+    insBytes = ByteUtilities.int16ToBytes(0x8312);
+    InstructionSet().run(insBytes, memory);
+
+    expect(memory.data.registerStatus, 0);
+  });
 }

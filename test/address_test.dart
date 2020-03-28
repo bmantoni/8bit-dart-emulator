@@ -16,10 +16,27 @@ void main() {
     expect(a.asInt(), 4);
   });
 
+  test('set address', () {
+    var a = Address.fromInt(0x0);
+    expect(() => { a.address = ByteData(3) }, throwsArgumentError);
+  });
+  
+  test('address from address', () {
+    var a = Address(ByteData(Address.SIZE)..setUint16(0, 0x4));
+    expect(a.asInt(), 4);
+  });
+
   test('lessThan int', () {
     var a = Address.fromInt(0x0400);
 
     expect(a < '0500', true);
+  });
+
+  test('lessThanEqualTo int', () {
+    var a = Address.fromInt(0x0400);
+
+    expect(a <= '0400', true);
+    expect(a <= '0401', true);
   });
 
   test('greaterThanInt', () {
