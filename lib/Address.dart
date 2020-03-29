@@ -29,7 +29,11 @@ class Address {
   }
 
   void increment() {
-    _addr = ByteUtilities.int16ToBytes(asInt() + 1);
+    incrementBy(1);
+  }
+
+  void incrementBy(int count) {
+    _addr = ByteUtilities.int16ToBytes(asInt() + count);
   }
 
   bool operator <(String hexAddr) {

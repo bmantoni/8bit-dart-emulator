@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:pic_dart_emu/InstructionSet.dart';
 import 'package:pic_dart_emu/PIC.dart';
 import 'package:pic_dart_emu/ProgramLoader.dart';
 import 'package:test/test.dart';
@@ -17,5 +18,19 @@ void main() {
     await loader.load(p.memory);
 
     p.run();
+  });
+
+  test('handles skip control true', () async {
+    var p = PIC();
+    p.nextInstruction(ControlFlow(skip: true));
+
+    expect(p.pc.asInt(), 2);
+  });
+
+  test('handles skip control false', () async {
+    var p = PIC();
+    p.nextInstruction(ControlFlow.none());
+
+    expect(p.pc.asInt(), 1);
   });
 }

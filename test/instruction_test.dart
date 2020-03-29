@@ -4,10 +4,11 @@ import 'package:pic_dart_emu/ByteUtilities.dart';
 import 'package:pic_dart_emu/InstructionLib.dart';
 import 'package:pic_dart_emu/InstructionSet.dart';
 import 'package:pic_dart_emu/Memory.dart';
+import 'package:pic_dart_emu/PIC.dart';
 import 'package:test/test.dart';
 
 void main() {
-  var testInstr = MovLwInstruction();
+  var testInstr = MovLw();
 
   test('match msb', () {
     expect(testInstr.matches(ByteUtilities.int16ToBytes(0x30DF)), true);
@@ -22,8 +23,8 @@ void main() {
   });
   
   test('movlw matches', () {
-    var insBytes = ByteUtilities.int16ToBytes(0xDF30);
-    var i = InstructionSet().run(insBytes, Memory());
+    var insBytes = ByteUtilities.int16ToBytes(0x30DF);
+    var i = InstructionSet().getMatchingInstr(insBytes);
 
     expect(i.name.toString(), 'Instructions.movlw');
   });
@@ -69,5 +70,34 @@ void main() {
     InstructionSet().run(insBytes, memory);
 
     expect(memory.data.registerStatus, 0);
+  });
+
+  test('decfsz sets f when it should', () {
+    final memory = Memory();
+    memory.data.setByte(0x20, 10);
+    var insBytes = ByteUtilities.int16ToBytes(0xA00B); // d: 1, f: 0x20
+    InstructionSet().run(insBytes, memory);
+
+    expect(memory.data.getByte(0x20), 9);
+  });
+
+  test('decfsz sets w when it should', () {
+    final memory = Memory();
+    memory.data.setByte(0x20, 10);
+    memory.w = 0x8;
+    var insBytes = ByteUtilities.int16ToBytes(0x200B); // d: 1, f: 0x20
+    InstructionSet().run(insBytes, memory);
+
+    expect(memory.data.getByte(0x20), 10);
+    expect(memory.w, 9);
+  });
+
+  test('decfsz returns skip when it should', () {
+    final memory = Memory();
+    memory.data.setByte(0x20, 1);
+    var insBytes = ByteUtilities.int16ToBytes(0xA00B); // d: 1, f: 0x20
+    var cf = InstructionSet().run(insBytes, memory);
+
+    expect(cf.skip, true);
   });
 }

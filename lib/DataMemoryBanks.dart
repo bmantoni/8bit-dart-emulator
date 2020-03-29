@@ -48,4 +48,9 @@ class DataMemory extends ByteStore {
     _currentBank.setUint8(offset, value);
     if (_mappedAddresses.contains(offset)) _otherBank.setUint8(offset, value);
   }
+
+  @override
+  void updateByte(int offset, int Function(int) f) {
+    setByte(offset, f(getByte(offset)));
+  }
 }

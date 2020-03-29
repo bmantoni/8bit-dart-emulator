@@ -9,10 +9,11 @@ enum Instructions {
   movlw,
   movwf,
   bsf,
-  bcf
+  bcf,
+  decfsz
 }
 
-class MovLwInstruction extends Instruction {
+class MovLw extends Instruction {
   @override
   Fields extractFields(ByteData opcode) {
     return Fields(k: extractField(opcode, 8, 8));
@@ -31,7 +32,7 @@ class MovLwInstruction extends Instruction {
   Function(Fields, Memory) get runFunc => (f, m) => m.w = f.k;
 }
 
-class BsfInstruction extends Instruction {
+class Bsf extends Instruction {
   @override
   Fields extractFields(ByteData opcode) {
     return Fields(b: extractField(opcode, 10, 3), f: extractField(opcode, 7, 7));
@@ -53,7 +54,7 @@ class BsfInstruction extends Instruction {
         m.data.getByte(f.f), f.b));
 }
 
-class BcfInstruction extends Instruction {
+class Bcf extends Instruction {
   @override
   Fields extractFields(ByteData opcode) {
     return Fields(b: extractField(opcode, 10, 3), f: extractField(opcode, 7, 7));
@@ -76,7 +77,7 @@ class BcfInstruction extends Instruction {
 }
 
 // move W to f
-class MovWfInstruction extends Instruction {
+class MovWf extends Instruction {
   @override
   Fields extractFields(ByteData opcode) {
     return Fields(f: extractField(opcode, 7, 7));
@@ -95,7 +96,43 @@ class MovWfInstruction extends Instruction {
   Function(Fields, Memory) get runFunc => (f, m) => m.data.setByte(f.f, m.w);
 }
 
-class UnsupportedInstruction extends Instruction {
+class DecFsz extends Instruction {
+  @override
+  Fields extractFields(ByteData opcode) {
+    return Fields(f: extractField(opcode, 7, 7), d: extractField(opcode, 8, 1));
+  }
+
+  @override
+  int get mask => 11;
+
+  @override
+  int get offset => 8;
+
+  @override
+  Instructions get name => Instructions.decfsz;
+
+  int _result;
+
+  //The contents of register ‘f’ are decremented. If ‘d’ is 0, the result
+  // is placed in the W register. If ‘d’ is 1, the result is placed 
+  // back in register ‘f’. If the result is 1, the next instruction is executed. 
+  // If the result is 0, then a NOP is executed instead, making it a 2TCY instruction.
+  @override
+  Function(Fields, Memory) get runFunc => (f, m) { 
+    _result = m.data.getByte(f.f) - 1;
+    if (f.d == 0) {
+      m.w = _result;
+    } else if (f.d == 1) {
+      m.data.setByte(f.f, _result);
+    }
+  };
+
+  @override
+  ControlFlow Function(Fields, Memory) get controlFunc => 
+    (f, m) => _result == 0 ? ControlFlow(skip: true) : ControlFlow.none();
+}
+
+class Unsupported extends Instruction {
   @override
   Fields extractFields(ByteData opcode) {
     return null;

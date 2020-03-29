@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:pic_dart_emu/hexparser/HexUtilities.dart';

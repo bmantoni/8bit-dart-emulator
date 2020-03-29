@@ -35,4 +35,9 @@ class ProgramMemory extends ByteStore {
   void setByte(int offset, int value) {
     _mem.setUint8(offset, value);
   }
+
+  @override
+  void updateByte(int offset, int Function(int) f) {
+    setByte(offset, f(getByte(offset)));
+  }
 }
