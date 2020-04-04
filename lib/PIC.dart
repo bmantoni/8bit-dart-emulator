@@ -4,6 +4,9 @@ import 'package:pic_dart_emu/InstructionSet.dart';
 import 'package:pic_dart_emu/Memory.dart';
 
 class PIC {
+  final int MAX_LOOPS = 1;
+  int _loops = 0;
+
   final Memory _memory = Memory();
   Memory get memory => _memory;
 
@@ -24,11 +27,14 @@ class PIC {
   }
     
   bool stop() {
-    // for now, don't wrap around.
-    return !_memory.program.isValidAddress(_programCounter);
+    // limit how many times it wil wrap around.
+    return _loops > MAX_LOOPS;
   }
 
   void nextInstruction(ControlFlow control) {
+    if (_programCounter.asInt() == 0) {
+      ++_loops;
+    }
     if (control.none) {
       _programCounter.increment();
     } else if (control.isSkip) {

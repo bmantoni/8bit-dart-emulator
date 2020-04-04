@@ -12,7 +12,7 @@ void main() {
   });
 
   test('runs with test program', () async {
-    var loader = ProgramLoader(File('./test/test1.hex'));    
+    var loader = ProgramLoader(File('./test/programs/test1.hex'));    
     
     var p = PIC();
     await loader.load(p.memory);

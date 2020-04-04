@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   test('file arg present', () {
     //expect(calculate(), 42);
-    ProgramRunner().run(['--' + ProgramRunner.PROGRAM_ARG, './test/test1.hex']);
+    ProgramRunner().run(['--' + ProgramRunner.PROGRAM_ARG, './test/programs/test1.hex']);
   });
 
   test('file arg missing', () {
