@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 
 void main() {
   test('reads lines properly', () async {
-    var parser = HexParser(File('./test/test1.hex'));
+    var parser = HexParser(File('./test/programs/test1.hex'));
     
     var dataLens = [10, 16, 16, 16, 16, 8, 2, 0];
     var i = 0;

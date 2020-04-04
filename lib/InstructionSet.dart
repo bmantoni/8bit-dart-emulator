@@ -59,7 +59,8 @@ class InstructionSet {
     Bcf(),      // 01 00bb bfff ffff
     MovWf(),    // 00 0000 1fff ffff
     DecFsz(),   // 00 1011 dfff ffff
-    Goto()      // 10 1kkk kkkk kkkk
+    Goto(),     // 10 1kkk kkkk kkkk
+    AddWf()     // 00 0111 dfff ffff
   ];
   final _unsupportedInstr = Unsupported();
 

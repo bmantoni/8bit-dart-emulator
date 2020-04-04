@@ -8,7 +8,7 @@ void main() {
   //final lineStr = ':0A0000008316FF2390008312FD2BEE';
 
   test('can load program to memory', () async {
-    var loader = ProgramLoader(File('./test/test1.hex'));
+    var loader = ProgramLoader(File('./test/programs/test1.hex'));
     var memory = Memory();
 
     await loader.load(memory);

@@ -12,7 +12,7 @@ class ProgramRunner {
   ProgramLoader loader;
   PIC computer = PIC();
 
-  int run(List<String> arguments) {
+  Future<int> run(List<String> arguments) async {
     final argParser = ArgParser()
       ..addOption(PROGRAM_ARG,
           abbr: 'p',
@@ -21,16 +21,21 @@ class ProgramRunner {
               });
 
     final args = argParser.parse(arguments);
-    runProgram(args[PROGRAM_ARG]);
+    var start = DateTime.now();
+
+    await runProgram(args[PROGRAM_ARG]);
+
+    var end = DateTime.now();
+    print('Execution time: ${end.difference(start).inMilliseconds}');
 
     return 0;
   }
 
-  void runProgram(String file) {
+  void runProgram(String file) async {
     print('Running program: ${file}!');
     
     loader = ProgramLoader(File(file));
-    loader.load(computer.memory);
+    await loader.load(computer.memory);
     computer.run();
   }
 }

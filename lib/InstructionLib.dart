@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:pic_dart_emu/Address.dart';
 import 'package:pic_dart_emu/ByteUtilities.dart';
 import 'package:pic_dart_emu/InstructionSet.dart';
 import 'package:pic_dart_emu/Memory.dart';
@@ -12,7 +11,8 @@ enum Instructions {
   bsf,
   bcf,
   decfsz,
-  goto
+  goto,
+  addwf
 }
 
 class MovLw extends Instruction {
@@ -121,8 +121,7 @@ class DecFsz extends Instruction {
   // If the result is 0, then a NOP is executed instead, making it a 2TCY instruction.
   @override
   Function(Fields, Memory) get runFunc => (f, m) { 
-    _result = m.data.getByte(f.f) == 0 ? 0 : m.data.getByte(f.f) - 1; // should i prevent the rollover?
-    print(_result);
+    _result = m.data.getByte(f.f) == 0 ? 0 : m.data.getByte(f.f) - 1; // prevent rollover
     if (f.d == 0) {
       m.w = _result;
     } else if (f.d == 1) {
@@ -133,6 +132,35 @@ class DecFsz extends Instruction {
   @override
   ControlFlow Function(Fields, Memory) get controlFunc => 
     (f, m) => _result == 0 ? ControlFlow(skip: true) : ControlFlow.none();
+}
+
+//  Add the contents of the W register with register ‘f’. 
+//  If ‘d’ is 0, the result is stored in the W register. If
+//  ‘d’ is 1, the result is stored back in register ‘f’.
+class AddWf extends Instruction {
+  @override
+  Fields extractFields(ByteData opcode) {
+    return Fields(f: extractField(opcode, 7, 7), d: extractField(opcode, 8, 1));
+  }
+
+  @override
+  int get mask => 7;
+
+  @override
+  int get offset => 8;
+
+  @override
+  Instructions get name => Instructions.addwf;
+
+  @override
+  Function(Fields, Memory) get runFunc => (f, m) { 
+    var result = m.w + m.data.getByte(f.f);
+    if (f.d == 0) {
+      m.w = result;
+    } else {
+      m.data.setByte(f.f, result);
+    }
+  };
 }
 
 class Goto extends Instruction {

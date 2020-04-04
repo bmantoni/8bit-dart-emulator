@@ -108,4 +108,26 @@ void main() {
 
     expect(cf.goto, 0x3E6);
   });
+
+  test('addwf puts result in register f when it should', () {
+    final pic = PIC();
+    final memory = pic.memory;
+    memory.w = 10;
+    memory.data.setByte(0x20, 32);
+    var insBytes = ByteUtilities.int16ToBytes(0xA007); // d: 1, f: 0x20
+    InstructionSet().run(insBytes, memory);
+
+    expect(memory.data.getByte(0x20), 42);
+  });
+
+  test('addwf puts result in w when it should', () {
+    final pic = PIC();
+    final memory = pic.memory;
+    memory.w = 10;
+    memory.data.setByte(0x20, 32);
+    var insBytes = ByteUtilities.int16ToBytes(0x2007); // d: 1, f: 0x20
+    InstructionSet().run(insBytes, memory);
+
+    expect(memory.w, 42);
+  });
 }
