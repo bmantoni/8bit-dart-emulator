@@ -55,7 +55,7 @@ void main() {
 
   test('goto', () {
     var dm = DataMemory();
-    dm.setByte(DataMemory.PCLATH_ADDR, 0x1800);
+    dm.setByte(DataMemory.PCLATH_ADDR, 0x18);
     var a = Address.fromInt(0x45A9); // random
     a.goto(0x305, dm);
     expect(a.asInt(), 0x1B05);

@@ -28,7 +28,7 @@ class PIC {
     
   bool stop() {
     // limit how many times it wil wrap around.
-    return _loops > MAX_LOOPS;
+    return _loops > MAX_LOOPS || !_memory.program.isValidAddress(_programCounter);
   }
 
   void nextInstruction(ControlFlow control) {

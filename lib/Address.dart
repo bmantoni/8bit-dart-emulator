@@ -41,7 +41,8 @@ class Address {
   // upper bits of PC are loaded from PCLATH<4:3>.
   void goto(int addr, DataMemory data) {
     _addr = ByteUtilities.int16ToBytes(0); // just to make sure bits > 13 are 0s.
-    var a = ByteUtilities.copyBits(addr, data.registerPclath, 13, 2);
+    var pclShifted = data.registerPclath << 8;
+    var a = ByteUtilities.copyBits(addr, pclShifted, 13, 2);
     
     _addr = ByteUtilities.int16ToBytes(a);
   }
