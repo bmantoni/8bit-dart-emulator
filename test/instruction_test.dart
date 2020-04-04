@@ -100,4 +100,12 @@ void main() {
 
     expect(cf.skip, true);
   });
+
+  test('goto returns goto address', () {
+    final memory = Memory();
+    var insBytes = ByteUtilities.int16ToBytes(0xE62B); // d: 1, f: 0x20
+    var cf = InstructionSet().run(insBytes, memory);
+
+    expect(cf.goto, 0x3E6);
+  });
 }

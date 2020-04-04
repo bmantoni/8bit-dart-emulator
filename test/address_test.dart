@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:pic_dart_emu/Address.dart';
+import 'package:pic_dart_emu/DataMemoryBanks.dart';
+import 'package:pic_dart_emu/Memory.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -48,6 +50,14 @@ void main() {
   test('increment', () {
     var a = Address.fromInt(0x0400);
     a.increment();
-    expect(a.address.getUint16(0), 1025);
+    expect(a.asInt(), 1025);
+  });
+
+  test('goto', () {
+    var dm = DataMemory();
+    dm.setByte(DataMemory.PCLATH_ADDR, 0x1800);
+    var a = Address.fromInt(0x45A9); // random
+    a.goto(0x305, dm);
+    expect(a.asInt(), 0x1B05);
   });
 }

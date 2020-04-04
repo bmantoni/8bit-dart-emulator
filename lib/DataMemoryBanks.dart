@@ -11,6 +11,7 @@ class DataMemory extends ByteStore {
   static const int BANK_SIZE_BYTES = 256; // 128 or 256 ?
 
   static const int STATUS_ADDR = 0x3;
+  static const int PCLATH_ADDR = 0x0A;
 
   static const List<int> _mappedAddresses = [0x02, 0x03, 0x04, 0x0A, 0x0B];
 
@@ -24,6 +25,7 @@ class DataMemory extends ByteStore {
   // can't have a circular loop of checking which bank for this, so look at 1
   // they're kept in sync
   int get registerStatus => _memories[0].getUint8(STATUS_ADDR); 
+  int get registerPclath => _memories[0].getUint8(PCLATH_ADDR);
 
   /*ByteData getBank(int num) {
     return _memories[num];

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:pic_dart_emu/ByteUtilities.dart';
+import 'package:pic_dart_emu/DataMemoryBanks.dart';
 import 'package:pic_dart_emu/hexparser/HexUtilities.dart';
 
 // This is used as a WORD address. So when addressing Memory, it's multiplied by 2.
@@ -34,6 +35,15 @@ class Address {
 
   void incrementBy(int count) {
     _addr = ByteUtilities.int16ToBytes(asInt() + count);
+  }
+
+  // The eleven-bit immediate value is loaded into PC bits <10:0>. The
+  // upper bits of PC are loaded from PCLATH<4:3>.
+  void goto(int addr, DataMemory data) {
+    _addr = ByteUtilities.int16ToBytes(0); // just to make sure bits > 13 are 0s.
+    var a = ByteUtilities.copyBits(addr, data.registerPclath, 13, 2);
+    
+    _addr = ByteUtilities.int16ToBytes(a);
   }
 
   bool operator <(String hexAddr) {

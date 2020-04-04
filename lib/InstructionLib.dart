@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:pic_dart_emu/Address.dart';
 import 'package:pic_dart_emu/ByteUtilities.dart';
 import 'package:pic_dart_emu/InstructionSet.dart';
 import 'package:pic_dart_emu/Memory.dart';
@@ -10,7 +11,8 @@ enum Instructions {
   movwf,
   bsf,
   bcf,
-  decfsz
+  decfsz,
+  goto
 }
 
 class MovLw extends Instruction {
@@ -119,7 +121,8 @@ class DecFsz extends Instruction {
   // If the result is 0, then a NOP is executed instead, making it a 2TCY instruction.
   @override
   Function(Fields, Memory) get runFunc => (f, m) { 
-    _result = m.data.getByte(f.f) - 1;
+    _result = m.data.getByte(f.f) == 0 ? 0 : m.data.getByte(f.f) - 1; // should i prevent the rollover?
+    print(_result);
     if (f.d == 0) {
       m.w = _result;
     } else if (f.d == 1) {
@@ -130,6 +133,29 @@ class DecFsz extends Instruction {
   @override
   ControlFlow Function(Fields, Memory) get controlFunc => 
     (f, m) => _result == 0 ? ControlFlow(skip: true) : ControlFlow.none();
+}
+
+class Goto extends Instruction {
+  @override
+  Fields extractFields(ByteData opcode) {
+    return Fields(k: extractField(opcode, 11, 11));
+  }
+
+  @override
+  int get mask => 5;
+
+  @override
+  int get offset => 11;
+
+  @override
+  Instructions get name => Instructions.goto;
+
+  @override
+  Function(Fields, Memory) get runFunc => (f, m) => {};
+
+  @override
+  ControlFlow Function(Fields, Memory) get controlFunc => 
+    (f, m) => ControlFlow(goto: f.k);
 }
 
 class Unsupported extends Instruction {

@@ -42,19 +42,19 @@ void main() {
   test('extract last 8 bits', () {
     var opcode = ByteUtilities.int16ToBytes(0x6D7);
     var m = ByteUtilities.extractBits(opcode, 8, 8);
-    expect(m.getUint16(0), 0xD7);
+    expect(m, 0xD7);
   });
 
   test('extract last 4 bits', () {
     var opcode = ByteUtilities.int16ToBytes(0x6D7);
     var m = ByteUtilities.extractBits(opcode, 4, 4);
-    expect(m.getUint16(0), 0x7);
+    expect(m, 0x7);
   });
 
   test('extract middle 8 bits', () {
     var opcode = ByteUtilities.int16ToBytes(0x26D7);
     var m = ByteUtilities.extractBits(opcode, 12, 8);
-    expect(m.getUint16(0), 0x6D);
+    expect(m, 0x6D);
   });
 
   // TODO more tests for smaller numbers of bits
@@ -107,5 +107,33 @@ void main() {
   test('get bit 2, false', () {
     var m = ByteUtilities.getBit(0x4, 2);
     expect(m, 1);
+  });
+
+  test('copybits 1', () {
+    var x = 0x20;
+    var y = 0x10;
+    var out = ByteUtilities.copyBits(y, x, 7, 2);
+    expect(out, 0x30);
+  });
+
+  test('copybits 2', () {
+    var x = 0x2;
+    var y = 0x1;
+    var out = ByteUtilities.copyBits(y, x, 2, 1);
+    expect(out, 0x3);
+  });
+
+  test('copybits 3', () {
+    var x = 0x2;
+    var y = 0x1;
+    var out = ByteUtilities.copyBits(x, y, 1, 1);
+    expect(out, 0x3);
+  });
+
+  test('copy 11 bits ', () {
+    var x = 0x6F7;
+    var y = 0x1001;
+    var out = ByteUtilities.copyBits(y, x, 11, 11);
+    expect(out, 0x16F7);
   });
 }

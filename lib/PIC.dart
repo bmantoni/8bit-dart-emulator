@@ -29,6 +29,12 @@ class PIC {
   }
 
   void nextInstruction(ControlFlow control) {
-    _programCounter.incrementBy((!control.none && control.skip) ? 2 : 1);
+    if (control.none) {
+      _programCounter.increment();
+    } else if (control.isSkip) {
+      _programCounter.incrementBy(2);
+    } else if (control.isGoto) {
+      _programCounter.goto(control.goto, _memory.data);
+    }
   }
 }

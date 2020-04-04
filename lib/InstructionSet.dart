@@ -11,10 +11,14 @@ class Fields {
 }
 
 class ControlFlow {
-  Address goto;
+  int goto;
+  bool get isGoto => goto != null;
   Address call; // TODO is this actually an address?
   bool skip;    // skip/noop the next instruction
+  bool get isSkip => skip != null && skip;
+
   // TODO returns
+  
   bool none = false;
 
   ControlFlow({this.goto, this.call, this.skip});
@@ -44,8 +48,7 @@ abstract class Instruction {
   Fields extractFields(ByteData opcode);
 
   int extractField(ByteData opcode, int rightBits, length) {
-    return ByteUtilities.extractBits(opcode, rightBits, length)
-      .getUint16(0);
+    return ByteUtilities.extractBits(opcode, rightBits, length);
   }
 }
 
@@ -56,6 +59,7 @@ class InstructionSet {
     Bcf(),      // 01 00bb bfff ffff
     MovWf(),    // 00 0000 1fff ffff
     DecFsz(),   // 00 1011 dfff ffff
+    Goto()      // 10 1kkk kkkk kkkk
   ];
   final _unsupportedInstr = Unsupported();
 

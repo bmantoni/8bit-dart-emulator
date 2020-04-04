@@ -23,7 +23,7 @@ class ByteUtilities {
     return x == mask;
   }
 
-  static ByteData extractBits(ByteData data, int bitsFromEnd, int length) {
+  static int extractBits(ByteData data, int bitsFromEnd, int length) {
     // this '2' shouldn't be here. the word byte size is set elsewhere
     if(data.lengthInBytes != 2) throw ArgumentError('Must be 2 bytes');
     
@@ -34,8 +34,7 @@ class ByteUtilities {
     // this got quite ugly, but if I just shift left then right, the old value persists.
     var y = ByteUtilities.int16ToBytes(x);
     // clear the right bits
-    x = y.getUint16(0) >> (dataLenBits - length);
-    return ByteUtilities.int16ToBytes(x);
+    return y.getUint16(0) >> (dataLenBits - length);
   }
 
   static int setBit(int i, int rightOffset) {
@@ -48,5 +47,12 @@ class ByteUtilities {
 
   static int getBit(int i, int rightOffset) {
     return ( i & (0x1 << rightOffset)) >> rightOffset;
+  }
+
+  // count bits from right, first bit is 1
+  static int copyBits(int to, int from, int start, int len) {
+    var x = extractBits(int16ToBytes(from), start, len);
+    x = x << (start - len);
+    return to | x;
   }
 }
