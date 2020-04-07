@@ -179,9 +179,6 @@ class Goto extends Instruction {
   Instructions get name => Instructions.goto;
 
   @override
-  Function(Fields, Memory) get runFunc => (f, m) => {};
-
-  @override
   ControlFlow Function(Fields, Memory) get controlFunc => 
     (f, m) => ControlFlow(goto: f.k);
 }

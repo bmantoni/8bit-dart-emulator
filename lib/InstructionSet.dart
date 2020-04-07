@@ -30,14 +30,14 @@ abstract class Instruction {
   // the right offset to the first lsb of the fixed operand code
   int get offset;
   int get mask;
-  dynamic Function(Fields, Memory) get runFunc;
+  dynamic Function(Fields, Memory) get runFunc => null;
   // this is optional. only needed if the instr affects control flow
   ControlFlow Function(Fields, Memory) get controlFunc => null;
 
   ControlFlow run(ByteData opcode, Memory memory) {
     print('Running ${name}');
     var f = extractFields(opcode);
-    runFunc(f, memory);
+    if (runFunc != null) runFunc(f, memory);
     return controlFunc != null ? controlFunc(f, memory) : ControlFlow.none();
   }
 
