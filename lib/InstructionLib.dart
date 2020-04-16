@@ -12,7 +12,8 @@ enum Instructions {
   bcf,
   decfsz,
   goto,
-  addwf
+  addwf,
+  incf
 }
 
 class MovLw extends Instruction {
@@ -155,6 +156,35 @@ class AddWf extends Instruction {
   @override
   Function(Fields, Memory) get runFunc => (f, m) { 
     var result = m.w + m.data.getByte(f.f);
+    if (f.d == 0) {
+      m.w = result;
+    } else {
+      m.data.setByte(f.f, result);
+    }
+  };
+}
+
+// The contents of register ‘f’ are incremented. 
+// If ‘d’ is 0, the result is placed in the W register. 
+// If ‘d’ is 1, the result is placed back in register ‘f’.
+class IncF extends Instruction {
+  @override
+  Fields extractFields(ByteData opcode) {
+    return Fields(f: extractField(opcode, 7, 7), d: extractField(opcode, 8, 1));
+  }
+
+  @override
+  int get mask => 10;
+
+  @override
+  int get offset => 8;
+
+  @override
+  Instructions get name => Instructions.incf;
+
+  @override
+  Function(Fields, Memory) get runFunc => (f, m) { 
+    var result = m.data.getByte(f.f) + 1;
     if (f.d == 0) {
       m.w = result;
     } else {

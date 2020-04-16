@@ -7,6 +7,7 @@ import 'package:pic_dart_emu/Memory.dart';
 import 'package:pic_dart_emu/PIC.dart';
 import 'package:test/test.dart';
 
+// For all the instruction tests, remember to swap the bytes
 void main() {
   var testInstr = MovLw();
 
@@ -129,5 +130,26 @@ void main() {
     InstructionSet().run(insBytes, memory);
 
     expect(memory.w, 42);
+  });
+
+  test('incf puts result in register f when it should', () {
+    final pic = PIC();
+    final memory = pic.memory;
+    memory.data.setByte(0x20, 32);
+    var insBytes = ByteUtilities.int16ToBytes(0xA00A); // d: 1, f: 0x20
+    InstructionSet().run(insBytes, memory);
+
+    expect(memory.data.getByte(0x20), 33);
+  });
+
+  test('incf puts result in w when it should', () {
+    final pic = PIC();
+    final memory = pic.memory;
+    memory.data.setByte(0x20, 32);
+    var insBytes = ByteUtilities.int16ToBytes(0x200A); // d: 0, f: 0x20
+    InstructionSet().run(insBytes, memory);
+
+    expect(memory.w, 33);
+    expect(memory.data.getByte(0x20), 32);
   });
 }
