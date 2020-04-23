@@ -27,10 +27,6 @@ class DataMemory extends ByteStore {
   int get registerStatus => _memories[0].getUint8(STATUS_ADDR); 
   int get registerPclath => _memories[0].getUint8(PCLATH_ADDR);
 
-  /*ByteData getBank(int num) {
-    return _memories[num];
-  }*/
-
   int get _currentBankNum => ByteUtilities.getBit(registerStatus, 5);
   ByteData get _currentBank => _memories[_currentBankNum];
   ByteData get _otherBank => _memories[_currentBankNum ^ 1];

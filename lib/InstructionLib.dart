@@ -13,7 +13,9 @@ enum Instructions {
   decfsz,
   goto,
   addwf,
-  incf
+  incf,
+  call,
+  returnSub
 }
 
 class MovLw extends Instruction {
@@ -132,7 +134,7 @@ class DecFsz extends Instruction {
 
   @override
   ControlFlow Function(Fields, Memory) get controlFunc => 
-    (f, m) => _result == 0 ? ControlFlow(skip: true) : ControlFlow.none();
+    (f, m) => _result == 0 ? ControlFlow.skip() : ControlFlow.none();
 }
 
 //  Add the contents of the W register with register ‘f’. 
@@ -210,7 +212,52 @@ class Goto extends Instruction {
 
   @override
   ControlFlow Function(Fields, Memory) get controlFunc => 
-    (f, m) => ControlFlow(goto: f.k);
+    (f, m) => ControlFlow.goto(f.k);
+}
+
+// Call Subroutine. First, return address (PC + 1) is pushed onto
+// the stack. The eleven-bit immediate address is loaded into PC bits
+// <10:0>. The upper bits of the PC are loaded from PCLATH. 
+// CALL is a two-cycle instruction.
+class Call extends Instruction {
+  @override
+  Fields extractFields(ByteData opcode) {
+    return Fields(k: extractField(opcode, 11, 11));
+  }
+
+  @override
+  int get mask => 4;
+
+  @override
+  int get offset => 11;
+
+  @override
+  Instructions get name => Instructions.call;
+
+  @override
+  ControlFlow Function(Fields, Memory) get controlFunc => 
+    (f, m) => ControlFlow.call(f.k);
+}
+
+// Return from subroutine
+class Return extends Instruction {
+  @override
+  Fields extractFields(ByteData opcode) {
+    return Fields();
+  }
+
+  @override
+  int get mask => 8;
+
+  @override
+  int get offset => 0;
+
+  @override
+  Instructions get name => Instructions.returnSub;
+
+  @override
+  ControlFlow Function(Fields, Memory) get controlFunc => 
+    (f, m) => ControlFlow.returnSub();
 }
 
 class Unsupported extends Instruction {

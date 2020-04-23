@@ -58,4 +58,8 @@ class Address {
   bool operator <=(String hexAddr) {
     return asInt() <= HexUtilities.hexToInt(hexAddr);
   }
+
+  Address operator +(int i) {
+    return Address.fromInt(asInt() + i);
+  }
 }

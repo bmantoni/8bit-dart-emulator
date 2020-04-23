@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:pic_dart_emu/Address.dart';
 import 'package:pic_dart_emu/ByteUtilities.dart';
 import 'package:pic_dart_emu/InstructionLib.dart';
 import 'package:pic_dart_emu/Memory.dart';
@@ -13,16 +12,19 @@ class Fields {
 class ControlFlow {
   int goto;
   bool get isGoto => goto != null;
-  Address call; // TODO is this actually an address?
-  bool skip;    // skip/noop the next instruction
-  bool get isSkip => skip != null && skip;
+  int call;
+  bool get isCall => call != null;
+  bool skip = false;    // skip/noop the next instruction
 
-  // TODO returns
+  bool returnSub = false;
   
   bool none = false;
 
-  ControlFlow({this.goto, this.call, this.skip});
+  ControlFlow.goto(this.goto);
+  ControlFlow.call(this.call);
   ControlFlow.none() { none = true; }
+  ControlFlow.skip() { skip = true; }
+  ControlFlow.returnSub() { returnSub = true; }
 }
 
 abstract class Instruction {
@@ -61,7 +63,9 @@ class InstructionSet {
     DecFsz(),   // 00 1011 dfff ffff
     Goto(),     // 10 1kkk kkkk kkkk
     AddWf(),    // 00 0111 dfff ffff
-    IncF()      // 00 1010 dfff ffff
+    IncF(),     // 00 1010 dfff ffff
+    Call(),     // 10 0kkk kkkk kkkk
+    Return(),   // 00 0000 0000 1000
   ];
   final _unsupportedInstr = Unsupported();
 
