@@ -38,4 +38,12 @@ class ProgramRunner {
     await loader.load(computer.memory);
     computer.run();
   }
+
+  void runProgramString(String program) async {
+    print('Running program String: ${program}!');
+    
+    loader = ProgramLoader.fromProgramString(program);
+    await loader.load(computer.memory);
+    computer.run();
+  }
 }

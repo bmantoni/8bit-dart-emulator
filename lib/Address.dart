@@ -62,4 +62,9 @@ class Address {
   Address operator +(int i) {
     return Address.fromInt(asInt() + i);
   }
+
+  @override
+  String toString() {
+    return HexUtilities.bytesToHex(_addr);
+  }
 }

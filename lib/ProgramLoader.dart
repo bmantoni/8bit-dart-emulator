@@ -6,14 +6,17 @@ import 'package:pic_dart_emu/Memory.dart';
 import 'package:pic_dart_emu/ProgramMemory.dart';
 
 class ProgramLoader {
-  File programFile;
+  File _programFile;
+  String _programString;
 
-  ProgramLoader(this.programFile);
+  ProgramLoader(this._programFile);
+  ProgramLoader.fromProgramString(this._programString);
 
-  Future load(Memory memory) {
-    var parser = HexParser(programFile);
+  void load(Memory memory) async {
+    var parser = _programFile != null ? 
+      HexParser(_programFile) : HexParser.fromString(_programString);
     
-    return parser.start((HexLine line) {
+    await parser.start((HexLine line) {
       // skip the first, and last lines
       if (line.address.intValue > 0 && line.address.intValue <= ProgramMemory.PROGRAM_DATA_BYTE_SIZE) {
         loadDataBytes(memory, line);

@@ -10,15 +10,36 @@ import 'package:pic_dart_emu/hexparser/HexLine.dart';
  */
 class HexParser {
   
-  File inFile;
+  File _inFile;
+  String _inProgram;
 
-  HexParser(this.inFile);
+  HexParser(this._inFile);
+  HexParser.fromString(this._inProgram);
 
-  Future start(onInstruction) {
-    print('Here ${inFile.existsSync()}');
+  void validate() {
+    if (_inFile != null && !_inFile.existsSync()) {
+      throw ArgumentError('Input file doesnt exist');
+    }
+    if (_inFile == null && _inProgram == null) {
+      throw ArgumentError('Must provide either an input file or program string');
+    }
+  }
+
+  void start(onInstruction) async {
+    validate();
     
-    var inputStream = inFile.openRead();
+    if (_inFile != null) {
+      await parseFile(onInstruction);
+    } else {
+      LineSplitter().convert(_inProgram)
+        .map((String lineStr) => HexLine(lineStr))
+        .forEach(onInstruction);
+    }
+  }
 
+  Future parseFile(onInstruction) {
+    var inputStream = _inFile.openRead();
+    
     return inputStream
       .transform(ascii.decoder)
       .transform(LineSplitter())
