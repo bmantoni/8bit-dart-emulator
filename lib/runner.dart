@@ -39,11 +39,13 @@ class ProgramRunner {
     computer.run();
   }
 
-  void runProgramString(String program) async {
+  // This will run the instructions in Timer callbacks,
+  // intended to allow a UI to update in between
+  void runProgramString(String program, {instrDelayUs = 1}) async {
     print('Running program String: ${program}!');
     
     loader = ProgramLoader.fromProgramString(program);
     await loader.load(computer.memory);
-    computer.run();
+    computer.runAsync(delayUs: instrDelayUs);
   }
 }

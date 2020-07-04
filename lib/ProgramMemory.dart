@@ -40,4 +40,6 @@ class ProgramMemory extends ByteStore {
   void updateByte(int offset, int Function(int) f) {
     setByte(offset, f(getByte(offset)));
   }
+
+  int get lengthInWords => PROGRAM_DATA_WORD_SIZE;
 }

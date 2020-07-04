@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:pic_dart_emu/Address.dart';
 import 'package:pic_dart_emu/Stack.dart';
 import 'package:pic_dart_emu/hexparser/HexUtilities.dart';
@@ -9,6 +11,7 @@ class PIC {
   static final int STACK_SIZE = 8;
 
   int _loops = 0;
+  Timer _timer;
 
   final Memory _memory = Memory();
   Memory get memory => _memory;
@@ -24,11 +27,26 @@ class PIC {
 
   void run() {
     while (!stop()) {
+      runInstruction();
+    }
+  }
+
+  void runAsync({int delayUs = 1}) {
+    var delay = Duration(microseconds: delayUs);
+    _timer = Timer.periodic(
+      delay,
+      (Timer timer) {
+        if (stop()) _timer.cancel();
+        runInstruction();
+      },
+    );
+  }
+
+  void runInstruction() {
       print('Running instruction at ${HexUtilities.bytesToHex(_programCounter.address)}');
       var opcode = _memory.program.getWord(_programCounter);
       var control = _iset.run(opcode, memory);
       nextInstruction(control);
-    }
   }
     
   bool stop() {
@@ -52,5 +70,13 @@ class PIC {
     } else if (control.returnSub) {
       _programCounter = _stack.pop();
     }
+
+    if (_instrStepCallback != null) _instrStepCallback();
+  }
+
+  Function _instrStepCallback;
+
+  void setNotifyCallback(Function callback) {
+    _instrStepCallback = callback;
   }
 }
